@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+		$(document).ready(function(){
+		$("button").click(function(){
+		$.get("/produtos",function(data,status){
+		var id = data[0].codigo;
+		var nome = data[0].nome;
+		var valor = data[0].valor;
+		$("#resultado").text("ID: " + id + "| Nome: " + nome + " | Valor: " + valor);
+
+		});
+	});
+});
+</script>
+</head>
+<body>
+<button>BUSCAR PRODUTO</button>
+<h1 id="resultado"></h1>
+</body>
+</html>
