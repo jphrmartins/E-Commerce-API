@@ -1,8 +1,6 @@
 package space.indietech;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,48 +19,13 @@ public class AcountFilter implements Filter {
 
 	private static final Logger LOGGER = Logger.getLogger(JWTSecurityFilter.class);
 
-	private static final String NO_SECURITY_TOKEN = "No security token";
-	private static final String TOKEN_HEADER = "token";
-
-	private static Set<String> loggedInUsers = new HashSet<>();
-	
-	static {
-		loggedInUsers.add("mauricio");
-		loggedInUsers.add("fundatec");
-	}
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-
-		if (request.getRequestURI().equals("/")) {
-			chain.doFilter(req, res);
-		} else {
-			String token = request.getHeader(TOKEN_HEADER);
-
-			if (token == null) {
-				LOGGER.warn(NO_SECURITY_TOKEN);
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, NO_SECURITY_TOKEN);
-			} else {
-				try {
-					String usuario = TokenParser.parse(token, "usuario");
-					validateUser(usuario);
-				} catch (Exception e) {
-					LOGGER.warn(e.getMessage());
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-					return;
-				}
-				chain.doFilter(req, res);
-			}
-		}
-	}
-
-	private void validateUser(String usuario) {
-		if (!loggedInUsers.contains(usuario)) {
-			throw new RuntimeException("Usuario invalido");
-		}
+		chain.doFilter(request, response);
+		LOGGER.info(request.getRequestURI() + " " + request.getMethod());
 	}
 
 	@Override

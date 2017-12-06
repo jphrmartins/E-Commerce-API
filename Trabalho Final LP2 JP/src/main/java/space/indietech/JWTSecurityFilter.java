@@ -30,10 +30,10 @@ public class JWTSecurityFilter implements Filter {
 	private static Set<String> loggedInUsers = new HashSet<>();
 	
 	static {
-		loggedInUsers.add("mauricio");
 		loggedInUsers.add("adm");
 		loggedInUsers.add("ferrari");
 		loggedInUsers.add("nathalia");
+		loggedInUsers.add("mauricio");
 	}
 
 	@Override
@@ -42,8 +42,23 @@ public class JWTSecurityFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
-		if (request.getRequestURI().equals("/")) {
-			chain.doFilter(req, res);
+		if (urlsAdm(request)) {
+			String token = request.getHeader(TOKEN_HEADER);
+
+			if (token == null) {
+				LOGGER.warn(NO_SECURITY_TOKEN);
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, NO_SECURITY_TOKEN);
+			} else {
+				try {
+					String usuario = TokenParser.parse(token, "usuario");
+					validateUserAdm(usuario);
+				} catch (Exception e) {
+					LOGGER.warn(e.getMessage());
+					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+					return;
+				}
+				chain.doFilter(req, res);
+			}
 		} else {
 			String token = request.getHeader(TOKEN_HEADER);
 
@@ -62,6 +77,18 @@ public class JWTSecurityFilter implements Filter {
 				chain.doFilter(req, res);
 			}
 		}
+	}
+
+	private boolean urlsAdm(HttpServletRequest request) {
+		String metodo = request.getMethod();
+		return request.getRequestURI().contains("/produtos") && (metodo.equals("DELETE") || metodo.equals("PUT"));
+	}
+
+	private void validateUserAdm(String usuario) {
+		if(!loggedInUsers.contains(usuario) && !usuario.equals("adm")) {
+			throw new RuntimeException("Usuario invalido");
+		}
+		
 	}
 
 	private void validateUser(String usuario) {
