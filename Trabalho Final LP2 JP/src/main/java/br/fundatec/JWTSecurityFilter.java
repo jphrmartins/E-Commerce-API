@@ -1,4 +1,4 @@
-package space.indietech;
+package br.fundatec;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -34,6 +34,7 @@ public class JWTSecurityFilter implements Filter {
 		loggedInUsers.add("ferrari");
 		loggedInUsers.add("nathalia");
 		loggedInUsers.add("mauricio");
+		loggedInUsers.add("arthur");
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class JWTSecurityFilter implements Filter {
 				}
 				chain.doFilter(req, res);
 			}
-		} else {
+		} else if(request.getRequestURI().contains("/carrinhos")){
 			String token = request.getHeader(TOKEN_HEADER);
 
 			if (token == null) {
@@ -69,6 +70,7 @@ public class JWTSecurityFilter implements Filter {
 				try {
 					String usuario = TokenParser.parse(token, "usuario");
 					validateUser(usuario);
+					TokenInfo.setNome(usuario);
 				} catch (Exception e) {
 					LOGGER.warn(e.getMessage());
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
@@ -76,12 +78,14 @@ public class JWTSecurityFilter implements Filter {
 				}
 				chain.doFilter(req, res);
 			}
+		} else {
+			chain.doFilter(req, res);
 		}
 	}
 
 	private boolean urlsAdm(HttpServletRequest request) {
 		String metodo = request.getMethod();
-		return request.getRequestURI().contains("/produtos") && (metodo.equals("DELETE") || metodo.equals("PUT"));
+		return request.getRequestURI().contains("/produtos") && (metodo.equals("DELETE") || metodo.equals("PUT") || metodo.equals("POST"));
 	}
 
 	private void validateUserAdm(String usuario) {

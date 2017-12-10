@@ -1,4 +1,4 @@
-package space.indietech;
+package br.fundatec;
 
 public class TokenInfo {
 

@@ -53,15 +53,11 @@
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="GENERAL"/>
 	</root>
-	<logger name="space.indietech.MailSender" level="INFO"  additivity="false">
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="MAIL"/>
-	</logger>
-	<logger name="space.indietech" level="DEBUG" additivity="false">
+	<logger name="br.fundatec" level="DEBUG" additivity="false">
 		<appender-ref ref="GENERAL"/>
 	</logger>
 	
-	<logger name="space.indietech.AccountFilter" level="DEBUG" additivity="false">
+	<logger name="br.fundatec.AccountFilter" level="DEBUG" additivity="false">
 		<appender-ref ref="ACCOUNTING"/>
 	</logger>
 	

@@ -1,4 +1,4 @@
-package space.indietech;
+package br.fundatec;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

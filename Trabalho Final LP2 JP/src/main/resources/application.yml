@@ -11,14 +11,5 @@ spring:
   datasource:
     url: jdbc:h2:~/test;AUTO_SERVER=TRUE
     
-#server:
-#  port: 8081
-security:
-  require-ssl: false
 server:
-  port: 443
-  ssl:
-    key-store-type: PKCS12
-    key-store: classpath:keystore.p12
-    key-store-password: 123456
-    key-alias: tomcat
+  port: 8081

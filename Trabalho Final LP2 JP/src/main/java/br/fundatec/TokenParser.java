@@ -1,4 +1,4 @@
-package space.indietech;
+package br.fundatec;
 
 import java.security.Key;
 import java.text.SimpleDateFormat;
@@ -62,6 +62,6 @@ public class TokenParser {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(createToken("mauricio"));
+		System.out.println(createToken("adm"));
 	}
 }

@@ -1,9 +1,27 @@
-package space.indietech.magojota.service;
+package br.fundatec.magojota.dao;
 
-public class ProdutoBo {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Produto")
+public class ProdutoEntity {
+	
+	@Id
+	@Column(name = "id")
+	@GeneratedValue
 	private long id;
+
+	@Column(name = "nome")
 	private String nome;
+	
+	@Column(name = "valor")
 	private double valor;
+	
+	@Column(name = "descricao")
 	private String descricao;
 
 	public long getId() {
@@ -37,5 +55,6 @@ public class ProdutoBo {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
+	
+	
 }
