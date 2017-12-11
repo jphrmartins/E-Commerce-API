@@ -60,5 +60,8 @@ public class MagoJotaDao {
 		return em.find(CarrinhoEntity.class, TokenInfo.getNome());
 		
 	}
+	public List<CarrinhoEntity> getCarrinhos(){
+		return em.createQuery("from CarrinhoEntity").getResultList();
+	}
 
 }

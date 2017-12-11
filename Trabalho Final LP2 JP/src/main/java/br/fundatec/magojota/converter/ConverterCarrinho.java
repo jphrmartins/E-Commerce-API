@@ -1,5 +1,8 @@
 package br.fundatec.magojota.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.fundatec.magojota.dao.CarrinhoEntity;
 import br.fundatec.magojota.service.CarrinhoBo;
 import br.fundatec.magojota.web.CarrinhoDTO;
@@ -25,6 +28,17 @@ public class ConverterCarrinho {
 		dto.setDono(cbo.getDono());
 		dto.setProdutos(ConverterProduto.convertListBoToDTO(cbo.getProdutos()));
 		return dto;
+	}
+
+	public static List<CarrinhoBo> convertListEntityToBo(List<CarrinhoEntity> carrinhos) {
+		List<CarrinhoBo> bos = new ArrayList<CarrinhoBo>();
+		for (CarrinhoEntity cEntity : carrinhos) {
+			CarrinhoBo bo = new CarrinhoBo();
+			bo.setDono(cEntity.getDono());
+			bo.setProdutos(ConverterProduto.convertListProdutoEntityToBo(cEntity.getProdutos()));
+			bos.add(bo);
+		}
+		return bos;
 	}
 
 }

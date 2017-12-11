@@ -39,13 +39,14 @@ public class MagoJotaService {
 	}
 
 	private ProdutoBo atualizaAtributos(ProdutoBo boBanco, ProdutoBo pbo) {
-		boBanco.setDescricao(pbo.getDescricao());
-		boBanco.setNome(pbo.getNome());
-		boBanco.setValor(pbo.getValor());
+		long id = boBanco.getId();
+		boBanco = pbo;
+		boBanco.setId(id);
 		return boBanco;
 	}
 
 	public void delete(long id) {
+		removeProdutoDosCarrinhos(id);
 		mDao.deleteProduto(id);
 	}
 
@@ -92,6 +93,10 @@ public class MagoJotaService {
 		return casoProdutoRemovido(removeu);
 	}
 
+	private List<CarrinhoBo> getCarrinhos() {
+		return ConverterCarrinho.convertListEntityToBo(mDao.getCarrinhos());
+	}
+
 	private CarrinhoBo casoProdutoRemovido(boolean removeu) {
 		if (removeu) {
 			return getCarrinho();
@@ -104,4 +109,18 @@ public class MagoJotaService {
 		mDao.updateCarrinho(ConverterCarrinho.convertBoToEntity(cBo));
 	}
 
+	private void removeProdutoDosCarrinhos(long id) {
+		List<CarrinhoBo> carrinhos = getCarrinhos();
+		for (int i = 0; i < carrinhos.size(); i++) {
+			CarrinhoBo carrinhoVolta = carrinhos.get(i);
+			List<ProdutoBo> produtoBos = carrinhoVolta.getProdutos();
+			for (int j = 0; j < produtoBos.size(); j++) {
+				ProdutoBo prodBo = produtoBos.get(j);
+				if (prodBo.getId() == id) {
+					carrinhoVolta.getProdutos().remove(j);
+					atualizaCarrinho(carrinhoVolta);
+				}
+			}
+		}
+	}
 }
