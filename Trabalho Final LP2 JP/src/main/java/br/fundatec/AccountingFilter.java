@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AcountFilter implements Filter {
+public class AccountingFilter implements Filter {
 
 	private static final Logger LOGGER = Logger.getLogger(JWTSecurityFilter.class);
 

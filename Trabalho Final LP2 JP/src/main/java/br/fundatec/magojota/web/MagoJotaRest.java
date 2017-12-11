@@ -65,12 +65,12 @@ public class MagoJotaRest {
 		mjs.delete(id);
 		return ResponseEntity.ok("Produto excluido com sucesso");
 	}
-	@GetMapping("carrinhos")
+	@GetMapping("/carrinhos")
 	public ResponseEntity<CarrinhoDTO> getCarrinho(){
 		CarrinhoDTO dto = ConverterCarrinho.convertBoToDTO(mjs.getCarrinho());
 		return ResponseEntity.ok(dto);
 	}
-	@PostMapping("carrinhos")
+	@PostMapping("/carrinhos")
 	public ResponseEntity<String> addProduto(@RequestBody ProdutoDTOCarrinho prodDTOcar){
 		try {
 			mjs.addProduto(prodDTOcar.getId());
@@ -78,9 +78,15 @@ public class MagoJotaRest {
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
-		
-		
 	}
-	
+	@DeleteMapping("/carrinhos/{id}")
+	public ResponseEntity<CarrinhoDTO> deletaProduto(@PathVariable long id){
+		try {
+			CarrinhoDTO response = ConverterCarrinho.convertBoToDTO(mjs.deleteProdutoCarrinho(id));
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 	
 }

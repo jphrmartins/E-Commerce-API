@@ -26,7 +26,7 @@ public class MagoJotaService {
 		pBo = ConverterProduto.convertProdutoEntityToBo(pe);
 		return pBo;
 	}
-	
+
 	public ProdutoBo update(ProdutoBo pbo, long id) {
 		try {
 			ProdutoBo boBanco = ConverterProduto.convertProdutoEntityToBo(mDao.getProdutoId(id));
@@ -37,7 +37,7 @@ public class MagoJotaService {
 			throw new RuntimeException();
 		}
 	}
-	
+
 	private ProdutoBo atualizaAtributos(ProdutoBo boBanco, ProdutoBo pbo) {
 		boBanco.setDescricao(pbo.getDescricao());
 		boBanco.setNome(pbo.getNome());
@@ -48,35 +48,60 @@ public class MagoJotaService {
 	public void delete(long id) {
 		mDao.deleteProduto(id);
 	}
-	
-	public List<ProdutoBo> getProdutos(){
+
+	public List<ProdutoBo> getProdutos() {
 		List<ProdutoEntity> entities = mDao.getProdutos();
 		List<ProdutoBo> bos = ConverterProduto.convertListProdutoEntityToBo(entities);
 		return bos;
 	}
-	
+
 	public ProdutoBo getProdutoId(long id) {
 		ProdutoEntity entity = mDao.getProdutoId(id);
 		return ConverterProduto.convertProdutoEntityToBo(entity);
 	}
-	
-	//=================================================================\\
-	
+
+	// =================================================================\\
+
 	public CarrinhoBo getCarrinho() {
 		if (mDao.getCarrinho() == null) {
 			mDao.createCarrinho();
 		}
 		return ConverterCarrinho.convertEntityToBo(mDao.getCarrinho());
 	}
-	
+
 	public void addProduto(long id) {
-		if (mDao.getCarrinho() == null) {
-			mDao.createCarrinho();
-		}
 		CarrinhoBo cBo = getCarrinho();
 		cBo.getProdutos().add(getProdutoId(id));
+		atualizaCarrinho(cBo);
+	}
+
+	public CarrinhoBo deleteProdutoCarrinho(long id) {
+		CarrinhoBo cBo = getCarrinho();
+		List<ProdutoBo> bos = cBo.getProdutos();
+		int index = 0;
+		boolean removeu = false;
+		for (ProdutoBo produtoBo : bos) {
+			if (produtoBo.getId() == id) {
+				cBo.getProdutos().remove(index);
+				atualizaCarrinho(cBo);
+				removeu = true;
+				break;
+			}
+			index++;
+		}
+		return casoProdutoRemovido(removeu);
+	}
+
+	private CarrinhoBo casoProdutoRemovido(boolean removeu) {
+		if (removeu) {
+			return getCarrinho();
+		}
+		throw new RuntimeException();
+
+	}
+
+	private void atualizaCarrinho(CarrinhoBo cBo) {
 		mDao.updateCarrinho(ConverterCarrinho.convertBoToEntity(cBo));
 	}
-	
-	
+
 }

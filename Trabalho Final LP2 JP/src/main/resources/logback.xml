@@ -57,7 +57,7 @@
 		<appender-ref ref="GENERAL"/>
 	</logger>
 	
-	<logger name="br.fundatec.AccountFilter" level="DEBUG" additivity="false">
+	<logger name="br.fundatec.AccountingFilter" level="DEBUG" additivity="false">
 		<appender-ref ref="ACCOUNTING"/>
 	</logger>
 	

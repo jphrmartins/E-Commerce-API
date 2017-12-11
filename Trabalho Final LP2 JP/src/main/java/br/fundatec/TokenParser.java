@@ -62,6 +62,6 @@ public class TokenParser {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(createToken("adm"));
+		System.out.println(createToken("augusto"));
 	}
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,7 +16,7 @@ public class CarrinhoEntity {
 	@Column(name = "dono")
 	private String dono;
 
-	@OneToMany
+	@ManyToMany
 	private List<ProdutoEntity> produtos;
 
 	public String getDono() {

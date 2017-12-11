@@ -31,6 +31,8 @@ public class JWTSecurityFilter implements Filter {
 	
 	static {
 		loggedInUsers.add("adm");
+		loggedInUsers.add("augusto");
+		loggedInUsers.add("joao pedro");
 		loggedInUsers.add("ferrari");
 		loggedInUsers.add("nathalia");
 		loggedInUsers.add("mauricio");
