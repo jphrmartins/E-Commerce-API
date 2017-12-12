@@ -27,7 +27,7 @@ public class MagoJotaTest {
 	private MockMvc mockMvc;
 
 	@Test
-	public void crudProduto() throws Exception {
+	public void crudProdutoCarrinho() throws Exception {
 		getListaProdutoVazia();
 		creatProduto();
 		getLisaProdutoPopulada();
@@ -41,8 +41,49 @@ public class MagoJotaTest {
 		creatProdutoParaCarrinho();
 		addProdutoCarrinho();
 		getCarrinhoCheio();
+		deleteProdutoCarrinho();
 	}
 
+
+	@Test
+	public void crudErrorProduto() throws Exception {
+		getProdutoPorIdInexistente();
+		addProdutoInvalido();
+		updateProdutoInexistente();
+	}
+
+	@Test
+	public void crudErrorCarrinho() throws Exception {
+		atribuiProdutoInvalido();
+		deletaProdutoInvalido();
+	}
+	
+	private void deletaProdutoInvalido() throws Exception {
+		String location = "/magojota/carrinho/2";
+		mockMvc.perform(delete(location).header("Content-type", "application/json").header("token",
+				"eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVkIjoiMjAxNy0xMi0xMSAyMToyMzoxNC44ODgiLCJ1c3VhcmlvIjoiam9hbyBwZWRybyJ9.rlYchUQ0UVZ0HPFYSQMXvt1iMJaCgZeFxQJdXKXh_3k"))
+		.andExpect(status().isNotFound());
+	}
+
+
+	private void atribuiProdutoInvalido() throws Exception {
+		String location = "/magojota/carrinho";
+		String json = "{" + "\"id\" : 2 " + "}";
+		mockMvc.perform(post(location).header("Content-type", "application/json").header("token",
+				"eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVkIjoiMjAxNy0xMi0xMSAyMToyMzoxNC44ODgiLCJ1c3VhcmlvIjoiam9hbyBwZWRybyJ9.rlYchUQ0UVZ0HPFYSQMXvt1iMJaCgZeFxQJdXKXh_3k")
+				.content(json))
+		.andExpect(status().isNotFound());
+	}
+
+
+	private void deleteProdutoCarrinho() throws Exception {
+		String location = "/magojota/carrinho/2";
+		mockMvc.perform(delete(location).header("Content-type", "application/json").header("token",
+				"eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVkIjoiMjAxNy0xMi0xMSAyMToyMzoxNC44ODgiLCJ1c3VhcmlvIjoiam9hbyBwZWRybyJ9.rlYchUQ0UVZ0HPFYSQMXvt1iMJaCgZeFxQJdXKXh_3k"))
+		.andExpect(status().isOk()).andExpect(jsonPath("$.dono").value("joao pedro"))
+		.andExpect(jsonPath("$.produtos[0]").doesNotExist());
+	}
+	
 	private void addProdutoCarrinho() throws Exception {
 		String location = "/magojota/carrinho";
 		String json = "{" + "\"id\" : 2 " + "}";
@@ -52,7 +93,7 @@ public class MagoJotaTest {
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$").value("Adicionado com sucesso"));
 	}
-
+	
 	private void creatProdutoParaCarrinho() throws Exception {
 		String location = "/magojota/produtos";
 		String json = "{" + "\"nome\":\"notebook\"," + "\"valor\":5000,"
@@ -61,18 +102,10 @@ public class MagoJotaTest {
 		mockMvc.perform(post(location).header("Content-type", "application/json").header("token",
 				"eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVkIjoiMjAxNy0xMi0xMSAxOTowMjo0NS45NjMiLCJ1c3VhcmlvIjoiYWRtIn0.jJXf9gU5JS9YyFBnWJGandgyuWEIxuNT8Uqr4WPe1n8")
 				.content(json)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(2))
-				.andExpect(jsonPath("$.nome").value("notebook")).andExpect(jsonPath("$.valor").value(5000))
-				.andExpect(jsonPath("$.descricao").value(
-						"2 gibas, processador: intel 2 cores, selo anti-arthur de qualidade, vem com o godzila giroflex"));
+		.andExpect(jsonPath("$.nome").value("notebook")).andExpect(jsonPath("$.valor").value(5000))
+		.andExpect(jsonPath("$.descricao").value(
+				"2 gibas, processador: intel 2 cores, selo anti-arthur de qualidade, vem com o godzila giroflex"));
 	}
-
-	@Test
-	public void crudErrorProduto() throws Exception {
-		getProdutoPorIdInexistente();
-		addProdutoInvalido();
-		updateProdutoInexistente();
-	}
-
 	private void getCarrinhoCheio() throws Exception {
 		String location = "/magojota/carrinho";
 		mockMvc.perform(get(location).header("Content-type", "application/json").header("token",
