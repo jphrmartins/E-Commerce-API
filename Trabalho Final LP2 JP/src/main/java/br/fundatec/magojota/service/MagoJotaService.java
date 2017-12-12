@@ -21,10 +21,21 @@ public class MagoJotaService {
 	}
 
 	public ProdutoBo save(ProdutoBo pBo) {
-		ProdutoEntity pe = ConverterProduto.convertProdutoBoToEntity(pBo);
-		pe = mDao.pustProduto(pe);
-		pBo = ConverterProduto.convertProdutoEntityToBo(pe);
-		return pBo;
+		try {
+			caposValidos(pBo);
+			ProdutoEntity pe = ConverterProduto.convertProdutoBoToEntity(pBo);
+			pe = mDao.pustProduto(pe);
+			pBo = ConverterProduto.convertProdutoEntityToBo(pe);
+			return pBo;
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}
+
+	private void caposValidos(ProdutoBo pBo) {
+		if (pBo.getNome() == null || pBo.getNome().trim().isEmpty() || pBo.getValor() == 0) {
+			throw new RuntimeException();
+		}
 	}
 
 	public ProdutoBo update(ProdutoBo pbo, long id) {

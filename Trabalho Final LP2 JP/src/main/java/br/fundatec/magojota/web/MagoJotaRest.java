@@ -28,7 +28,7 @@ public class MagoJotaRest {
 	public MagoJotaRest(MagoJotaService mjs) {
 		this.mjs = mjs;
 	}
-	
+
 	@GetMapping("/produtos")
 	public ResponseEntity<List<ProdutoDTO>> getProdutos(){
 		List<ProdutoBo> bos = mjs.getProdutos();
@@ -47,8 +47,12 @@ public class MagoJotaRest {
 	@PostMapping("/produtos")
 	public ResponseEntity<ProdutoDTO> addProduto(@RequestBody ProdutoDTO pdto){
 		ProdutoBo bo = ConverterProduto.convertDtoToBO(pdto);
-		bo = mjs.save(bo);
-		return ResponseEntity.ok(ConverterProduto.convertBoToDTO(bo));
+		try {
+			bo = mjs.save(bo);
+			return ResponseEntity.ok(ConverterProduto.convertBoToDTO(bo));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 	@PutMapping("/produtos/{id}")
 	public ResponseEntity<ProdutoDTO> attProduto(@RequestBody ProdutoDTO pdto, @PathVariable("id") long id){
@@ -65,12 +69,12 @@ public class MagoJotaRest {
 		mjs.delete(id);
 		return ResponseEntity.ok("Produto excluido com sucesso");
 	}
-	@GetMapping("/carrinhos")
+	@GetMapping("/carrinho")
 	public ResponseEntity<CarrinhoDTO> getCarrinho(){
 		CarrinhoDTO dto = ConverterCarrinho.convertBoToDTO(mjs.getCarrinho());
 		return ResponseEntity.ok(dto);
 	}
-	@PostMapping("/carrinhos")
+	@PostMapping("/carrinho")
 	public ResponseEntity<String> addProduto(@RequestBody ProdutoDTOCarrinho prodDTOcar){
 		try {
 			mjs.addProduto(prodDTOcar.getId());
@@ -79,7 +83,7 @@ public class MagoJotaRest {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	@DeleteMapping("/carrinhos/{id}")
+	@DeleteMapping("/carrinho/{id}")
 	public ResponseEntity<CarrinhoDTO> deletaProduto(@PathVariable long id){
 		try {
 			CarrinhoDTO response = ConverterCarrinho.convertBoToDTO(mjs.deleteProdutoCarrinho(id));

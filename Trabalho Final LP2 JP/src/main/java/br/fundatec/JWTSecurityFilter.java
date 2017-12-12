@@ -62,7 +62,7 @@ public class JWTSecurityFilter implements Filter {
 				}
 				chain.doFilter(req, res);
 			}
-		} else if(request.getRequestURI().contains("/carrinhos")){
+		} else if(request.getRequestURI().contains("/carrinho")){
 			String token = request.getHeader(TOKEN_HEADER);
 
 			if (token == null) {

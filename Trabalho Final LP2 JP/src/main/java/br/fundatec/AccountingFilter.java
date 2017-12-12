@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountingFilter implements Filter {
 
-	private static final Logger LOGGER = Logger.getLogger(JWTSecurityFilter.class);
+	private static final Logger LOGGER = Logger.getLogger(AccountingFilter.class);
 
 
 	@Override
